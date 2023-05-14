@@ -1,12 +1,19 @@
 const path = require('path');
 
 module.exports = {
-    performance: { hints: false },
-    entry: './src/main.ts',
-
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
+    entry: {
+        content_script: './src/content_script.ts',
+        inject_content: './src/inject_content.ts',
+        popup: './src/popup/popup.ts',
+    },
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'index.bundle.js'
+        filename: '[name].bundle.js'
     },
     resolve: {
         extensions: ['.ts', '.js']

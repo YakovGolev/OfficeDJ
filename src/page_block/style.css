@@ -1,0 +1,14 @@
+.page-block {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    font-weight: 900;
+    color: #ffdb4d;
+    position: relative;
+    top: 30%;
+    background-color: black;
+    padding: 10px;
+    user-select: none;
+}
