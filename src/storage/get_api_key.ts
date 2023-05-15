@@ -1,4 +1,4 @@
 /** Get Api key from storage. */
-export const GetApiKey = async () => {
+export const GetApiKeyAsync = async () => {
     return (await chrome.storage.local.get()).api_key
 }

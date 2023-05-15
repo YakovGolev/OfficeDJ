@@ -8,7 +8,7 @@ module.exports = {
     },
     entry: {
         content_script: './src/content_script.ts',
-        inject_content: './src/inject_content.ts',
+        inject_content: './src/yandex_music/external_api/inject_content.ts',
         popup: './src/popup/popup.ts',
     },
     output: {
@@ -16,7 +16,8 @@ module.exports = {
         filename: '[name].bundle.js'
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
+        modules: [path.resolve(__dirname, 'src'), 'node_modules']
     },
     module: {        
         rules: [

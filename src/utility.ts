@@ -1,67 +1,42 @@
-import { getTelegramSendActionUrlAsync } from "./constants"
-
-export const getDataAsync = async <T> (url: URL): Promise<T> => {    
-    const response = await fetch(url)
-    const jsonData = await response.json()
-  
-    return jsonData
+/** Try get Url from string. */
+export const tryGetTrackUrl = (message: string): URL | undefined => {
+  try {
+    return new URL(message)
+  } catch {
+    return
   }
+}
 
-  export interface IInlineButton {
-    text: string
-    callback_data: string
-  }
+/** Click page element by selector. */
+export const clickButton = (selector: string): void => {
+  (document.querySelector(selector) as HTMLElement)?.click()
+}
 
-  interface IMessageBody {
-    chat_id: number
-    text: string
-    reply_markup?: {
-      inline_keyboard: IInlineButton[][]
-    } 
-  }
+/** Set timeout with awaiting. */
+export const sleep = async (timeout: number): Promise<void> => {
+  return new Promise(resolve => setTimeout(resolve, timeout))
+}
 
-  export const sendMessageAsync = async <T> (url: URL, chatId: number, message: string, buttons?: IInlineButton[][]): Promise<T> => {
-    const messageBody: IMessageBody = {
-      chat_id: chatId,
-      text: message,
-    }
-    if (buttons)
-      messageBody.reply_markup = {
-        inline_keyboard: buttons
+/** Wait for DOM element exists by selector. */
+export const waitForElementLoaded = async (selector: string): Promise<void> => {
+  await waitForCondition(() => document.querySelector(selector) !== null)
+}
+
+const waitForCondition = async (condition: () => boolean): Promise<void> => {
+  const timeout: number = 100
+  const maxRetryCount = 100
+  let count = 1
+  return new Promise((resolve, reject) => {
+    const interval = setInterval(() => {
+      count++
+      if (condition()) {
+        clearInterval(interval)
+        resolve()
       }
-
-    const response = await fetch(url, postWithBody(JSON.stringify(messageBody)))
-    const jsonData = await response.json()
-  
-    return jsonData
-  }
-
-  export const sendTypingAction = async (chatId: number): Promise<void> => {
-    const messageBody = {
-      chat_id: chatId,
-      action: 'typing'
-    }
-
-    const response = await fetch(await getTelegramSendActionUrlAsync(), postWithBody(JSON.stringify(messageBody)))
- 
-    const jsonData = await response.json()
-  
-    return jsonData
-  }
-
-  const defaultPostRequest = {
-    method: "POST", 
-    mode: "cors", 
-    cache: "no-cache",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    redirect: "follow", 
-    referrerPolicy: "no-referrer",
-    body: undefined
-  }
-
-  const postWithBody = (body: string): RequestInit => {
-    return {...defaultPostRequest, body: body} as RequestInit
-  }
-  
+      if (count > maxRetryCount) {
+        clearInterval(interval)
+        reject(new Error('Превышено количество попыток выполнения действия'))
+      }
+    }, timeout)
+  })
+}
