@@ -3,7 +3,7 @@ import { sendMessageAsync } from "telegram/messages"
 import { getTelegramSendMessageUrlAsync } from "telegram/pathes"
 import { IInlineButton } from "telegram/interfaces"
 import { IMusicSerachResult, ITrackInfo } from "yandex_music/interfaces"
-import { buildSearchUrl } from "./search_url"
+import { buildSearchUrl } from "./pathes"
 
 /** Search tracks and send result in reply. */
 export const searchTracksAsync = async (query: string, chatId: number) => {

@@ -5,7 +5,7 @@ import { buildSidebarSelector, contextMenuButtonSelector, addToQueueButtonSelect
 import { waitForElementLoaded, clickButton, sleep } from "utility"
 
 /** Add track to extension playlist. */
-export const addTrack = async (trackUrl: URL, chatId: number): Promise<void> => {
+export const addTrackAsync = async (trackUrl: URL, chatId: number): Promise<void> => {
   document.dispatchEvent(new CustomEvent(ExternalAPI.Navigate, { detail: trackUrl.pathname }))
   await waitForElementLoaded(buildSidebarSelector(trackUrl.pathname))
   clickButton(contextMenuButtonSelector)
