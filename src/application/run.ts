@@ -5,11 +5,13 @@ import { ITelegramApiResponse } from "telegram/interfaces"
 import { setPageBlock } from "page_block/setPageBlock"
 import { injectScript } from "yandex_music/external_api/inject_script"
 import { handleMessageAsync } from "./handle_message"
+import { addExternalApiListeners } from "yandex_music/external_api/actions"
 
 /** Run Application. */
 export const runApplication = async () => {
   injectScript()
   setPageBlock()
+  addExternalApiListeners()
 
   let lastOffset = 0
   let offsetChanged = false
@@ -21,7 +23,7 @@ export const runApplication = async () => {
       const data = await getDataAsync<ITelegramApiResponse>(url)
 
       if (data.ok && data.result.length) {
-        ({ chatId, lastOffset, offsetChanged } = await handleMessageAsync(data, lastOffset, offsetChanged))
+        ({ chatId, lastOffset, offsetChanged } = await handleMessageAsync(data))
       }
       else {
         offsetChanged = false

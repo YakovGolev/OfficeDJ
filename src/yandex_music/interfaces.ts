@@ -11,6 +11,7 @@ export interface ITrackInfo {
   title: string
   artists: {
     name: string
+    title: string
   }[]
   albums: {
     id: number
