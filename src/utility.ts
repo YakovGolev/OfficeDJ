@@ -22,9 +22,7 @@ export const waitForElementLoaded = async (selector: string): Promise<void> => {
   await waitForCondition(() => document.querySelector(selector) !== null)
 }
 
-const waitForCondition = async (condition: () => boolean): Promise<void> => {
-  const timeout: number = 100
-  const maxRetryCount = 100
+export const waitForCondition = async (condition: () => boolean, maxRetryCount: number = 100, timeout: number = 100): Promise<void> => {
   let count = 1
   return new Promise((resolve, reject) => {
     const interval = setInterval(() => {
@@ -33,7 +31,24 @@ const waitForCondition = async (condition: () => boolean): Promise<void> => {
         clearInterval(interval)
         resolve()
       }
-      if (count > maxRetryCount) {
+      if (count > maxRetryCount && maxRetryCount !== -1) {
+        clearInterval(interval)
+        reject(new Error('Превышено количество попыток выполнения действия'))
+      }
+    }, timeout)
+  })
+}
+
+export const waitForAsyncCondition = async (condition: () => Promise<boolean>, maxRetryCount: number = 100, timeout: number = 100): Promise<void> => {
+  let count = 1
+  return new Promise((resolve, reject) => {
+    const interval = setInterval(async () => {
+      count++
+      if (await condition()) {
+        clearInterval(interval)
+        resolve()
+      }
+      if (count > maxRetryCount && maxRetryCount !== -1) {
         clearInterval(interval)
         reject(new Error('Превышено количество попыток выполнения действия'))
       }

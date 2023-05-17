@@ -1,4 +1,5 @@
-import { getChatId, getMessageData, sendTypingAction } from "telegram/messages"
+import { sendTypingAction } from "telegram/messaging"
+import { getChatId, getMessageData } from "telegram/message_data"
 import { ITelegramApiResponse } from "telegram/interfaces"
 import { tryGetTrackUrl } from "utility"
 import { searchTracksAsync } from "yandex_music/search"

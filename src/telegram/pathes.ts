@@ -1,19 +1,19 @@
-import { GetApiKeyAsync } from "storage/get_api_key"
-
 const telegramApiUrl = 'https://api.telegram.org/bot'
 
 /** Url for getUpdates method. */
-export const getTelegramGetUpdatesUrlAsync = async () => `${telegramApiUrl}${await GetApiKeyAsync()}/getUpdates`
+export const getTelegramGetUpdatesUrl = (apiKey: string) => new URL(`${telegramApiUrl}${apiKey}/getUpdates`)
 
 /** Url for sendChatAction method. */
-export const getTelegramSendActionUrlAsync = async () => `${telegramApiUrl}${await GetApiKeyAsync()}/sendChatAction`
+export const getTelegramSendActionUrl = (apiKey: string) => new URL(`${telegramApiUrl}${apiKey}/sendChatAction`)
 
 /** Url for sendMessage method. */
-export const getTelegramSendMessageUrlAsync = async () => `${telegramApiUrl}${await GetApiKeyAsync()}/sendMessage`
+export const getTelegramSendMessageUrl = (apiKey: string) => new URL(`${telegramApiUrl}${apiKey}/sendMessage`)
+
+/** Url for getMe method. */
+export const getTelegramBotCheckUrl = (apiKey: string) => new URL(`${telegramApiUrl}${apiKey}/getMe`)
 
 /** Build Telegram Request URL */
-export const buildTelegramUrl = async (method: string, offsetChanged: boolean, lastOffset: number) => {
-    const url = new URL(method)
+export const buildTelegramUrl = (url: URL, offsetChanged: boolean, lastOffset: number) => {
     if (offsetChanged)
       url.searchParams.append('offset', (lastOffset + 1).toString())
     if (!offsetChanged && lastOffset !== 0)

@@ -1,5 +1,6 @@
-import { sendMessageAsync } from "telegram/messages"
-import { getTelegramSendMessageUrlAsync } from "telegram/pathes"
+import { GetApiKeyAsync } from "storage/get_api_key"
+import { sendMessageAsync } from "telegram/messaging"
+import { getTelegramSendMessageUrl } from "telegram/pathes"
 import { ITrackInfo } from "yandex_music/interfaces"
 
 export enum ExternalAPI {
@@ -15,7 +16,8 @@ export const addExternalApiListeners = () => {
 
     document.addEventListener(ExternalAPI.SendPlaylist, async e => {
         const { chatId, tracks } = (e as CustomEvent<{chatId: number, tracks: ITrackInfo[]}>).detail
-        await sendMessageAsync(new URL(await getTelegramSendMessageUrlAsync()), chatId, buildTrackList(tracks))
+        const url = getTelegramSendMessageUrl(await GetApiKeyAsync())
+        await sendMessageAsync(url, chatId, buildTrackList(tracks))
     })
 }
 

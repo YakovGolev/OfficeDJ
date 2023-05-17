@@ -1,7 +1,7 @@
-import { buildTrackPath } from "yandex_music/pathes"
-import { IInlineButton, IMessageBody, ITelegramUpdate } from "./interfaces"
-import { getTelegramSendActionUrlAsync } from "./pathes"
+import { IInlineButton, IMessageBody, ITelegramApiResponse } from "./interfaces"
 import { postWithBody } from "requests"
+import { getTelegramBotCheckUrl, getTelegramSendActionUrl } from "./pathes"
+import { GetApiKeyAsync } from "storage/get_api_key"
 
 /** Send reply to Telegram. */
 export const sendMessageAsync = async <T>(url: URL, chatId: number, message: string, buttons?: IInlineButton[][]): Promise<T> => {
@@ -25,21 +25,18 @@ export const sendTypingAction = async (chatId: number): Promise<void> => {
     chat_id: chatId,
     action: 'typing'
   }
-
-  const response = await fetch(await getTelegramSendActionUrlAsync(), postWithBody(JSON.stringify(messageBody)))
+  const apiKey = await GetApiKeyAsync()
+  const url = getTelegramSendActionUrl(apiKey)
+  const response = await fetch(url, postWithBody(JSON.stringify(messageBody)))
   const jsonData = await response.json()
 
   return jsonData
 }
 
-export const getMessageData = (update: ITelegramUpdate) => {
-  return update.message?.text ?? buildTrackPath(update.callback_query?.data)
-}
+export const sendCkeckRequest = async (apiKey: string): Promise<boolean> => {
+  const url = getTelegramBotCheckUrl(apiKey)
+  const response = await fetch(url)
+  const jsonData = await response?.json() as ITelegramApiResponse
 
-export const getChatId = (update: ITelegramUpdate) => {
-  const chatId = update.message?.chat.id ?? update.callback_query?.message.chat.id
-  if (!chatId)
-    throw new Error('Неизвестный тип сообщения')
-
-  return chatId
+  return jsonData?.ok
 }
