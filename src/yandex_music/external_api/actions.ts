@@ -22,5 +22,6 @@ export const addExternalApiListeners = () => {
 }
 
 const buildTrackList = (tracks: ITrackInfo[]): string => tracks
+        .filter(t => t !== null)
         .map(t => `${t.artists[0].title} - ${t.title}`)
         .join('\n')
