@@ -1,10 +1,19 @@
 import { IInlineButton, IMessageBody, ITelegramApiResponse } from "./interfaces"
 import { postWithBody } from "requests"
-import { getTelegramBotCheckUrl, getTelegramSendActionUrl } from "./pathes"
+import { getTelegramBotCheckUrl, getTelegramGetUpdatesUrl, getTelegramSendActionUrl } from "./pathes"
 import { GetApiKeyAsync } from "storage/get_api_key"
+import { getTelegramSendMessageUrl } from "./pathes"
+
+let apiKey = ''
+let sendMessageUrl: URL, sendActionUrl: URL
+
+export const UpdateApiKeyAsync = async () => {
+  apiKey = await GetApiKeyAsync()
+  UpdateUrls()
+}
 
 /** Send reply to Telegram. */
-export const sendMessageAsync = async <T>(url: URL, chatId: number, message: string, buttons?: IInlineButton[][]): Promise<T> => {
+export const sendMessageAsync = async <T>(chatId: number, message: string, buttons?: IInlineButton[][]): Promise<T> => {
   const messageBody: IMessageBody = {
     chat_id: chatId,
     text: message,
@@ -14,7 +23,7 @@ export const sendMessageAsync = async <T>(url: URL, chatId: number, message: str
       inline_keyboard: buttons
     }
 
-  const response = await fetch(url, postWithBody(JSON.stringify(messageBody)))
+  const response = await fetch(sendMessageUrl, postWithBody(JSON.stringify(messageBody)))
   const jsonData = await response.json()
 
   return jsonData
@@ -25,18 +34,22 @@ export const sendTypingAction = async (chatId: number): Promise<void> => {
     chat_id: chatId,
     action: 'typing'
   }
-  const apiKey = await GetApiKeyAsync()
-  const url = getTelegramSendActionUrl(apiKey)
-  const response = await fetch(url, postWithBody(JSON.stringify(messageBody)))
+  const response = await fetch(sendActionUrl, postWithBody(JSON.stringify(messageBody)))
   const jsonData = await response.json()
 
   return jsonData
 }
 
 export const sendCkeckRequest = async (apiKey: string): Promise<boolean> => {
-  const url = getTelegramBotCheckUrl(apiKey)
-  const response = await fetch(url)
+  const response = await fetch(getTelegramBotCheckUrl(apiKey))
   const jsonData = await response?.json() as ITelegramApiResponse
 
   return jsonData?.ok
+}
+
+export const getGetUpdatesUrl = () => getTelegramGetUpdatesUrl(apiKey)
+
+const UpdateUrls = () => {
+  sendMessageUrl = getTelegramSendMessageUrl(apiKey)
+  sendActionUrl = getTelegramSendActionUrl(apiKey)
 }

@@ -1,7 +1,4 @@
-import { getDataAsync } from "requests"
-import { sendMessageAsync } from "telegram/messaging"
-import { getTelegramGetUpdatesUrl, buildTelegramUrl, getTelegramSendMessageUrl } from "telegram/pathes"
-import { ITelegramApiResponse } from "telegram/interfaces"
+import { UpdateApiKeyAsync, sendMessageAsync } from "telegram/messaging"
 import { setPageBlock } from "page_block/setPageBlock"
 import { injectScript } from "yandex_music/external_api/inject_script"
 import { handleMessageAsync } from "./handle_message"
@@ -9,6 +6,7 @@ import { addExternalApiListeners } from "yandex_music/external_api/actions"
 import { waitForAsyncCondition } from "utility"
 import { GetApiKeyAsync } from "storage/get_api_key"
 import { checkIsApiKeyAsync } from "telegram/api_key"
+import { getUpdatesAsync } from "telegram/get_updates"
 
 /** Run Application. */
 export const runApplication = async () => {
@@ -20,7 +18,7 @@ export const runApplication = async () => {
   setPageBlock()
   addExternalApiListeners()
 
-  const apiKey = await GetApiKeyAsync()
+  await UpdateApiKeyAsync()
 
   let lastOffset = 0
   let offsetChanged = false
@@ -28,8 +26,7 @@ export const runApplication = async () => {
     let chatId: number | undefined
 
     try {
-      const url = buildTelegramUrl(getTelegramGetUpdatesUrl(apiKey), offsetChanged, lastOffset)
-      const data = await getDataAsync<ITelegramApiResponse>(url)
+      const data = await getUpdatesAsync(offsetChanged, lastOffset)
 
       if (data.ok && data.result.length) {
         ({ chatId, lastOffset, offsetChanged } = await handleMessageAsync(data))
@@ -40,7 +37,7 @@ export const runApplication = async () => {
     } catch (error) {
       console.log(error)
       if (chatId)
-        await sendMessageAsync(getTelegramSendMessageUrl(apiKey), chatId, (error as Error)?.toString())
+        await sendMessageAsync(chatId, (error as Error)?.toString())
     }
     finally {
       getNextMessage()

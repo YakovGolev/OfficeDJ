@@ -3,8 +3,6 @@ import { sendMessageAsync } from "telegram/messaging"
 import { IInlineButton } from "telegram/interfaces"
 import { IMusicSerachResult, ITrackInfo } from "yandex_music/interfaces"
 import { buildSearchUrl } from "./pathes"
-import { GetApiKeyAsync } from "storage/get_api_key"
-import { getTelegramSendMessageUrl } from "telegram/pathes"
 
 /** Search tracks and send result in reply. */
 export const searchTracksAsync = async (query: string, chatId: number) => {
@@ -12,9 +10,7 @@ export const searchTracksAsync = async (query: string, chatId: number) => {
   const message = getSearchResultMessage(serachResult)
   const buttons = getButtons(serachResult)
 
-  const apiKey = await GetApiKeyAsync()
-
-  await sendMessageAsync(getTelegramSendMessageUrl(apiKey), chatId, message, buttons)
+  await sendMessageAsync(chatId, message, buttons)
 }
 
 const sendSearchTrackRequestAsync = async (query: string): Promise<IMusicSerachResult> => {
