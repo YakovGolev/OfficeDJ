@@ -1,4 +1,4 @@
-import { ExternalAPI } from "./actions"
+import { ExternalAPI } from "./actions_enum"
 
 document.addEventListener(ExternalAPI.Navigate, e => {
     const event = e as CustomEvent<string>

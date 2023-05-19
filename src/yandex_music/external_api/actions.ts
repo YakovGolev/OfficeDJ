@@ -1,11 +1,6 @@
 import { sendMessageAsync } from "telegram/messaging"
 import { ITrackInfo } from "yandex_music/interfaces"
-
-export enum ExternalAPI {
-    Navigate = 'ExternalAPI_Navigate',
-    RequestPlaylist = 'ExternalAPI_RequestPlaylist',
-    SendPlaylist = 'ExternalAPI_SendPlaylist'
-}
+import { ExternalAPI } from "./actions_enum"
 
 export const navigate = (trackUrl: URL) => document.dispatchEvent(new CustomEvent(ExternalAPI.Navigate, { detail: trackUrl.pathname }))
 export const requestPlaylist = (chatId: number) => document.dispatchEvent(new CustomEvent(ExternalAPI.RequestPlaylist, { detail: chatId }))

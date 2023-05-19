@@ -1,5 +1,5 @@
 import { UpdateApiKeyAsync, sendMessageAsync } from "telegram/messaging"
-import { setPageBlock } from "page_block/setPageBlock"
+import { setPageBlock } from "page_block/set_page_block"
 import { injectScript } from "yandex_music/external_api/inject_script"
 import { handleMessageAsync } from "./handle_message"
 import { addExternalApiListeners } from "yandex_music/external_api/actions"
