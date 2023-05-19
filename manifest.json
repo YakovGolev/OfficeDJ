@@ -4,7 +4,7 @@
   "description": "Yandex Music extension",
   "version": "1.0",
   "action": {
-    "default_popup": "src/popup/index.html"
+    "default_popup": "index.html"
   },
   "permissions": [
     "storage"
@@ -12,13 +12,13 @@
   "content_scripts": [
     {
       "matches": ["https://music.yandex.ru/*"],
-      "js": ["build/content_script.bundle.js"],
+      "js": ["content_script.bundle.js"],
       "all_frames": false
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["build/inject_content.bundle.js", "build/inject_content.bundle.js.map", "build/content_script.bundle.js.map"],
+      "resources": ["inject_content.bundle.js", "inject_content.bundle.js.map", "content_script.bundle.js.map"],
       "matches": ["https://music.yandex.ru/*"]
     }
   ]

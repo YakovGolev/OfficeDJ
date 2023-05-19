@@ -17,6 +17,7 @@
         "@types/chrome": "0.0.235",
         "babel-loader": "9.1.2",
         "chrome-types": "0.1.191",
+        "copy-webpack-plugin": "11.0.0",
         "css-loader": "6.7.3",
         "eslint": "8.39.0",
         "eslint-plugin-jsdoc": "43.2.0",

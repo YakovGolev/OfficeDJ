@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     performance: {
@@ -19,12 +20,12 @@ module.exports = {
         extensions: ['.ts', '.js'],
         modules: [path.resolve(__dirname, 'src'), 'node_modules']
     },
-    module: {        
+    module: {
         rules: [
              {
                 test: /\.svg$/,
                 use: ['raw-loader']
-            },    
+            },
             {
                 test: /\.(ts|js)$/,
                 exclude: /node_modules/,
@@ -50,5 +51,19 @@ module.exports = {
                 use: ["style-loader", "css-loader"],
             },
         ]
-    }
+    },
+    plugins: [
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: "manifest.json",
+                    to: "[name][ext]",
+                },
+                {
+                    from: "src/**/*.html",
+                    to: "[name][ext]",
+                }
+            ]
+        })
+    ]
 };
