@@ -19,6 +19,8 @@ export const handleMessageAsync = async (data: ITelegramApiResponse) => {
 
   const message = getMessageData(update)
   if (message.startsWith('/')) {
+    if (message === '/start')
+      return result
     await handleCommandAsync(message.slice(1), chatId)
     return result
   }
@@ -28,8 +30,7 @@ export const handleMessageAsync = async (data: ITelegramApiResponse) => {
     await addTrackAsync(trackUrl, chatId)
     return result
   }
-  
+
   await searchTracksAsync(message, chatId)
   return result
 }
-

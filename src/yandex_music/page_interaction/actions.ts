@@ -15,6 +15,9 @@ const updatePlaylistsLink = () => {
 /** Add track to extension playlist. */
 export const addTrackAsync = async (trackUrl: URL, chatId: number): Promise<void> => {
   navigate(trackUrl)
+  await sleep(300)
+  if (document.querySelector('.page-404'))
+    return
   await waitForElementLoaded(buildSidebarSelector(trackUrl.pathname))
   clickButton(contextMenuButtonSelector)
   await waitForElementLoaded(addToPlaylistButtonSelector)
@@ -49,7 +52,7 @@ export const addTrackAsync = async (trackUrl: URL, chatId: number): Promise<void
     await waitForElementLoaded(playlistSelector)
     const link = (document.querySelector(playlistSelector) as HTMLAnchorElement)?.href
     if (link)
-      extensionPlaylistUrl = new URL(link)      
+      extensionPlaylistUrl = new URL(link)
   }
   if (extensionPlaylistUrl)
     navigate(extensionPlaylistUrl)
@@ -62,4 +65,3 @@ const getPlaylist = () => {
 
   return null
 }
-
