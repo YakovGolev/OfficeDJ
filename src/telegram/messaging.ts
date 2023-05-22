@@ -1,14 +1,14 @@
 import { IInlineButton, IMessageBody, ITelegramApiResponse } from "./interfaces"
 import { postWithBody } from "requests"
 import { getTelegramBotCheckUrl, getTelegramGetUpdatesUrl, getTelegramSendActionUrl } from "./pathes"
-import { GetApiKeyAsync } from "storage/get_api_key"
+import { getApiKeyAsync } from "storage/get_api_key"
 import { getTelegramSendMessageUrl } from "./pathes"
 
 let apiKey = ''
 let sendMessageUrl: URL, sendActionUrl: URL
 
 export const UpdateApiKeyAsync = async () => {
-  apiKey = await GetApiKeyAsync()
+  apiKey = await getApiKeyAsync()
   UpdateUrls()
 }
 

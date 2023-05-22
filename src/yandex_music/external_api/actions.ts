@@ -1,6 +1,7 @@
 import { sendMessageAsync } from "telegram/messaging"
 import { ITrackInfo } from "yandex_music/interfaces"
 import { ExternalAPI } from "./actions_enum"
+import { getAppStatus } from "storage/get_api_key"
 
 export const navigate = (trackUrl: URL) => document.dispatchEvent(new CustomEvent(ExternalAPI.Navigate, { detail: trackUrl.pathname }))
 export const requestPlaylist = (chatId: number) => document.dispatchEvent(new CustomEvent(ExternalAPI.RequestPlaylist, { detail: chatId }))
@@ -10,6 +11,11 @@ export const addExternalApiListeners = () => {
     document.addEventListener(ExternalAPI.SendPlaylist, async e => {
         const { chatId, tracks } = (e as CustomEvent<{chatId: number, tracks: ITrackInfo[]}>).detail
         await sendMessageAsync(chatId, buildTrackList(tracks))
+    })
+
+    document.addEventListener(ExternalAPI.SourceChanged, async () => {
+        const status = await getAppStatus()
+        console.log(status)
     })
 }
 

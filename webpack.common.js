@@ -23,7 +23,7 @@ module.exports = {
     module: {
         rules: [
              {
-                test: /\.svg$/,
+                test: /\.(svg|html)$/,
                 use: ['raw-loader']
             },
             {
@@ -60,7 +60,7 @@ module.exports = {
                     to: "[name][ext]",
                 },
                 {
-                    from: "src/**/*.html",
+                    from: "src/**/index.html",
                     to: "[name][ext]",
                 }
             ]

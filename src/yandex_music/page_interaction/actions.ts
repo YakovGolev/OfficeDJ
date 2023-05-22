@@ -1,9 +1,9 @@
 import { sendMessageAsync } from "telegram/messaging"
 import { navigate } from "yandex_music/external_api/actions"
-import { buildSidebarSelector, contextMenuButtonSelector, addToPlaylistButtonSelector, artistSelector, listOfPlaylistsSelector, createPlaylistInputSelector } from "./selectors"
+import { buildSidebarSelector, contextMenuButtonSelector, addToPlaylistButtonSelector, artistSelector, listOfPlaylistsSelector, createPlaylistInputSelector, addToQueueButtonSelector } from "./selectors"
 import { waitForElementLoaded, clickButton, sleep } from "utility"
+import { extensionPlaylist } from "yandex_music/playlist_name"
 
-const extensionPlaylist = 'Office DJ'
 let playlistsUrl : URL, extensionPlaylistUrl : URL
 
 const updatePlaylistsLink = () => {
@@ -19,6 +19,10 @@ export const addTrackAsync = async (trackUrl: URL, chatId: number): Promise<void
   if (document.querySelector('.page-404'))
     return
   await waitForElementLoaded(buildSidebarSelector(trackUrl.pathname))
+  clickButton(contextMenuButtonSelector)
+  await waitForElementLoaded(addToQueueButtonSelector)
+  clickButton(addToQueueButtonSelector)
+  await sleep(300)
   clickButton(contextMenuButtonSelector)
   await waitForElementLoaded(addToPlaylistButtonSelector)
   clickButton(addToPlaylistButtonSelector)

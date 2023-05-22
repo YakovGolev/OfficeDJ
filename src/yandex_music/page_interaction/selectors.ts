@@ -1,4 +1,5 @@
 export const contextMenuButtonSelector = '.sidebar-track .d-context-menu .d-button'
+export const addToQueueButtonSelector = '.d-context-menu__popup .d-context-menu__item_forth'
 export const addToPlaylistButtonSelector = '.d-context-menu__popup .d-context-menu__item_add'
 export const listOfPlaylistsSelector = '.d-context-menu__popup .d-addition__playlists'
 export const artistSelector = '.sidebar-track .sidebar__info .d-artists'
