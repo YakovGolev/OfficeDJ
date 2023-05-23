@@ -47,7 +47,18 @@ export const addTrackAsync = async (trackUrl: URL, chatId: number): Promise<void
   const artistName = (document.querySelector(artistSelector) as HTMLElement)?.innerText
   const message = `Трек "${artistName} - ${trackName}" успешно добавлен в очередь воспроизведения`
   await sendMessageAsync(chatId, message)
+  await navigateToPlaylistAsync()
+}
 
+const getPlaylist = () => {
+  const playlistElement = document.querySelector(listOfPlaylistsSelector)?.querySelector(`span[title="${extensionPlaylist}"]`)
+  if (playlistElement)
+    return playlistElement.parentElement
+
+  return null
+}
+
+export const navigateToPlaylistAsync = async () => {
   if (!extensionPlaylistUrl){
     if (!playlistsUrl)
       updatePlaylistsLink()
@@ -60,12 +71,4 @@ export const addTrackAsync = async (trackUrl: URL, chatId: number): Promise<void
   }
   if (extensionPlaylistUrl)
     navigate(extensionPlaylistUrl)
-}
-
-const getPlaylist = () => {
-  const playlistElement = document.querySelector(listOfPlaylistsSelector)?.querySelector(`span[title="${extensionPlaylist}"]`)
-  if (playlistElement)
-    return playlistElement.parentElement
-
-  return null
 }
