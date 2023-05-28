@@ -3,5 +3,7 @@ export enum ExternalAPI {
     RequestPlaylist = 'ExternalAPI_RequestPlaylist',
     SendPlaylist = 'ExternalAPI_SendPlaylist',
     TogglePlay = 'ExternalAPI_TogglePlay',
-    SourceChanged = 'ExternalAPI_SourceChanged'
+    GetSourceInfo = 'ExternalAPI_GetSourceInfo',
+    SourceInfo = 'ExternalAPI_SourceInfo',
+    PlayLastTrack = 'ExternalAPI_PlayLastTrack'
 }

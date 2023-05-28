@@ -9,6 +9,7 @@ export interface IMusicSerachResult {
 /** Yandex music track object. */
 export interface ITrackInfo {
   title: string
+  link: string
   artists: {
     name: string
     title: string
@@ -17,4 +18,11 @@ export interface ITrackInfo {
     id: number
   }[]
   id: number
+}
+
+/** Details provided with SendPlaylist event */
+export interface IGetTrackListDetails {
+  chatId: number
+  tracks: ITrackInfo[]
+  current: ITrackInfo
 }

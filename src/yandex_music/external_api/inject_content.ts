@@ -9,9 +9,11 @@ document.addEventListener(ExternalAPI.Navigate, e => {
 document.addEventListener(ExternalAPI.RequestPlaylist, e => {
     const event = e as CustomEvent<number>
     const tracks = window?.externalAPI?.getTracksList()
+    const current = window?.externalAPI?.getCurrentTrack()
     document.dispatchEvent(new CustomEvent(ExternalAPI.SendPlaylist, { detail: {
         chatId: event.detail,
-        tracks: tracks
+        tracks: tracks,
+        current: current
     }}))
 })
 
@@ -21,9 +23,12 @@ document.addEventListener(ExternalAPI.TogglePlay, e => {
     window?.externalAPI?.togglePause(agr)
 })
 
-window?.externalAPI?.on('state', () => {
-    const source = window?.externalAPI?.getSourceInfo()?.title as string
-    if (source !== extensionPlaylist){
-        document.dispatchEvent(new CustomEvent(ExternalAPI.SourceChanged))
-    }
+document.addEventListener(ExternalAPI.GetSourceInfo, e => {
+    const sourceInfo = window?.externalAPI?.getSourceInfo()
+    document.dispatchEvent(new CustomEvent(ExternalAPI.SourceInfo, { detail: sourceInfo }))
+})
+
+document.addEventListener(ExternalAPI.PlayLastTrack, async e => {
+    const tracks = window?.externalAPI?.getTracksList()
+    await window?.externalAPI?.play(tracks.length - 1)
 })

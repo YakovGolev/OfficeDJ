@@ -1,7 +1,7 @@
 import { IInlineButton, IMessageBody, ITelegramApiResponse } from "./interfaces"
 import { postWithBody } from "requests"
 import { getTelegramBotCheckUrl, getTelegramGetUpdatesUrl, getTelegramSendActionUrl } from "./pathes"
-import { getApiKeyAsync } from "storage/get_api_key"
+import { getApiKeyAsync } from "storage/api_key"
 import { getTelegramSendMessageUrl } from "./pathes"
 
 let apiKey = ''
@@ -13,7 +13,7 @@ export const UpdateApiKeyAsync = async () => {
 }
 
 /** Send reply to Telegram. */
-export const sendMessageAsync = async <T>(chatId: number, message: string, buttons?: IInlineButton[][]): Promise<T> => {
+export const sendMessageAsync = async <T>(chatId: number, message: string, buttons?: IInlineButton[][], withFormating?: boolean): Promise<T> => {
   const messageBody: IMessageBody = {
     chat_id: chatId,
     text: message,
@@ -22,6 +22,9 @@ export const sendMessageAsync = async <T>(chatId: number, message: string, butto
     messageBody.reply_markup = {
       inline_keyboard: buttons
     }
+
+  if (withFormating)
+    messageBody.parse_mode = 'HTML'
 
   const response = await fetch(sendMessageUrl, postWithBody(JSON.stringify(messageBody)))
   const jsonData = await response.json()

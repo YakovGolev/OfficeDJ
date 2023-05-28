@@ -1,16 +1,16 @@
+import { getApiKeyAsync, setApiKeyAsync } from "storage/api_key"
+
 (async () => {
     const apiKeyInput = document.querySelector('.bot-api-key')! as HTMLInputElement
 
-    const apikey = (await chrome.storage.local.get())['api_key']
+    const apikey = await getApiKeyAsync()
     
     if (apikey)
         apiKeyInput.value = apikey
 
-    apiKeyInput.addEventListener('input', e => {
+    apiKeyInput.addEventListener('input', async (e) => {
         const val = (e.target as HTMLInputElement)?.value
         if (val)
-            chrome.storage.local.set({
-                api_key: val
-            }) 
+            await setApiKeyAsync(val)
     })
 })()

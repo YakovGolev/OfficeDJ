@@ -4,7 +4,8 @@ import { injectScript } from "yandex_music/external_api/inject_script"
 import { handleMessageAsync } from "./handle_message"
 import { addExternalApiListeners } from "yandex_music/external_api/actions"
 import { waitForAsyncCondition } from "utility"
-import { getApiKeyAsync, getAppStatus, setAppStatus } from "storage/get_api_key"
+import { getApiKeyAsync } from "storage/api_key"
+import { getAppStatus, setAppStatusAsync } from "storage/app_status"
 import { checkIsApiKeyAsync } from "telegram/api_key"
 import { getUpdatesAsync } from "telegram/get_updates"
 import { initPlayButton } from "page_block/page_block_controls"
@@ -21,7 +22,8 @@ export const runApplication = async () => {
 
   await UpdateApiKeyAsync()
 
-  initPlayButton()  
+  initPlayButton()
+  await setAppStatusAsync('waiting')
 
   let lastOffset = 0
   let offsetChanged = false
@@ -33,7 +35,7 @@ export const runApplication = async () => {
       await waitForAsyncCondition(async () => (await getAppStatus()) === 'waiting')
 
       if (data.ok && data.result.length) {
-        await setAppStatus('processing');
+        await setAppStatusAsync('processing');
 
         ({ chatId, lastOffset, offsetChanged } = await handleMessageAsync(data))
       }
@@ -55,6 +57,6 @@ export const runApplication = async () => {
 const nextMessageEvent = 'getNextMessage'
 
 const getNextMessage = async () =>{
-  await setAppStatus('waiting')
+  await setAppStatusAsync('waiting')
   document.dispatchEvent(new CustomEvent(nextMessageEvent))
 } 

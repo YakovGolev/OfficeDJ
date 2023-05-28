@@ -3,6 +3,7 @@ import { navigate } from "yandex_music/external_api/actions"
 import { buildSidebarSelector, contextMenuButtonSelector, addToPlaylistButtonSelector, artistSelector, listOfPlaylistsSelector, createPlaylistInputSelector, addToQueueButtonSelector } from "./selectors"
 import { waitForElementLoaded, clickButton, sleep } from "utility"
 import { extensionPlaylist } from "yandex_music/playlist_name"
+import { ExternalAPI } from "yandex_music/external_api/actions_enum"
 
 let playlistsUrl : URL, extensionPlaylistUrl : URL
 
@@ -48,6 +49,7 @@ export const addTrackAsync = async (trackUrl: URL, chatId: number): Promise<void
   const message = `Трек "${artistName} - ${trackName}" успешно добавлен в очередь воспроизведения`
   await sendMessageAsync(chatId, message)
   await navigateToPlaylistAsync()
+  document.dispatchEvent(new CustomEvent(ExternalAPI.GetSourceInfo))
 }
 
 const getPlaylist = () => {

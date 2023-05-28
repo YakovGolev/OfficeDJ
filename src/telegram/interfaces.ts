@@ -32,5 +32,6 @@ export interface IMessageBody {
   text: string
   reply_markup?: {
     inline_keyboard: IInlineButton[][]
-  } 
+  }
+  parse_mode?: string
 }
