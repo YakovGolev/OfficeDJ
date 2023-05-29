@@ -14,7 +14,7 @@ export const addExternalApiListeners = () => {
 
     document.addEventListener(ExternalAPI.SendPlaylist, async e => {
         const detail = (e as CustomEvent<IGetTrackListDetails>).detail
-        await sendMessageAsync(detail.chatId, buildTrackList(detail.tracks, detail.current), undefined, true)
+        await sendMessageAsync(detail.chatId, buildTrackList(detail.tracks, detail.index), undefined, true)
     })
 
     document.addEventListener(ExternalAPI.SourceInfo, async e => {
@@ -25,20 +25,39 @@ export const addExternalApiListeners = () => {
         await setAppStatusAsync('processing')
         await navigateToPlaylistAsync()
         await waitForElementLoaded(playlistPlaybuttonSelector)
-        clickButton(playlistPlaybuttonSelector)        
+        clickButton(playlistPlaybuttonSelector)
         document.dispatchEvent(new CustomEvent(ExternalAPI.TogglePlay, { detail : 'PAUSE' }))
         await sleep(3000)
         document.dispatchEvent(new CustomEvent(ExternalAPI.PlayLastTrack))
-        await setAppStatusAsync('waiting')  
+        await setAppStatusAsync('waiting')
     })
 }
 
-const buildTrackList = (tracks: ITrackInfo[], current: ITrackInfo): string => tracks
-        .filter(t => t !== null)
+interface ITackWithIndex {
+    track: ITrackInfo
+    index: number
+}
+
+const buildTrackList = (tracks: ITrackInfo[], currentTrackIndex: number): string => tracks
+        .map((t, i) : ITackWithIndex => {
+            return {
+                track: t,
+                index: i
+            }
+        })
+        .filter(t => t.track !== null)
+        .filter(t => t.index > currentTrackIndex - 1)
         .map(t => {
-            let result = `${t.artists[0].title} - ${t.title}`
-            if (t.link === current.link)
-                result = `<code>${new Array(result.length + 2).fill('=').join('')}\n ${result}\n${new Array(result.length + 2).fill('=').join('')}</code>`
+            const track = t.track
+            let result = `${track.artists[0].title} - ${track.title}`
+            if (t.index < currentTrackIndex){
+                result = `<s>${result}</s>`
+            }
+            if (t.index === currentTrackIndex){
+                const frame = new Array(Math.max(30, result.length + 2)).fill('=').join('')
+                result = `<code>${frame}\n ${result}\n${frame}</code>`
+            }
+
             return result
         })
         .join('\n')

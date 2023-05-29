@@ -1,4 +1,3 @@
-import { extensionPlaylist } from "yandex_music/playlist_name"
 import { ExternalAPI } from "./actions_enum"
 
 document.addEventListener(ExternalAPI.Navigate, e => {
@@ -9,11 +8,11 @@ document.addEventListener(ExternalAPI.Navigate, e => {
 document.addEventListener(ExternalAPI.RequestPlaylist, e => {
     const event = e as CustomEvent<number>
     const tracks = window?.externalAPI?.getTracksList()
-    const current = window?.externalAPI?.getCurrentTrack()
+    const index = window?.externalAPI?.getTrackIndex()
     document.dispatchEvent(new CustomEvent(ExternalAPI.SendPlaylist, { detail: {
         chatId: event.detail,
         tracks: tracks,
-        current: current
+        index: index
     }}))
 })
 
