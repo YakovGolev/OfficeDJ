@@ -5,11 +5,12 @@ import { getAppStatus, setAppStatusAsync } from "storage/app_status"
 import { clickButton, sleep, waitForAsyncCondition, waitForElementLoaded } from "utility"
 import { navigateToPlaylistAsync } from "yandex_music/page_interaction/actions"
 import { extensionPlaylist } from "yandex_music/playlist_name"
+import { playlistPlaybuttonSelector } from "yandex_music/page_interaction/selectors"
 
 export const navigate = (trackUrl: URL) => document.dispatchEvent(new CustomEvent(ExternalAPI.Navigate, { detail: trackUrl.pathname }))
 export const requestPlaylist = (chatId: number) => document.dispatchEvent(new CustomEvent(ExternalAPI.RequestPlaylist, { detail: chatId }))
 
-const playlistPlaybuttonSelector = '.page-playlist__head .button-play'
+
 export const addExternalApiListeners = () => {
 
     document.addEventListener(ExternalAPI.SendPlaylist, async e => {
@@ -37,6 +38,7 @@ interface ITackWithIndex {
     track: ITrackInfo
     index: number
 }
+const maxTrackListSize = 10
 
 const buildTrackList = (tracks: ITrackInfo[], currentTrackIndex: number): string => tracks
         .map((t, i) : ITackWithIndex => {
@@ -46,7 +48,7 @@ const buildTrackList = (tracks: ITrackInfo[], currentTrackIndex: number): string
             }
         })
         .filter(t => t.track !== null)
-        .filter(t => t.index > currentTrackIndex - 1)
+        .filter(t => t.index > Math.min(tracks.length - maxTrackListSize, currentTrackIndex - 2))
         .map(t => {
             const track = t.track
             let result = `${track.artists[0].title} - ${track.title}`

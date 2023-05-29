@@ -24,5 +24,5 @@ export interface ITrackInfo {
 export interface IGetTrackListDetails {
   chatId: number
   tracks: ITrackInfo[]
-  current: ITrackInfo
+  index: number
 }

@@ -36,7 +36,6 @@ export const runApplication = async () => {
 
       if (data.ok && data.result.length) {
         await setAppStatusAsync('processing');
-
         ({ chatId, lastOffset, offsetChanged } = await handleMessageAsync(data))
       }
       else {
@@ -56,7 +55,7 @@ export const runApplication = async () => {
 
 const nextMessageEvent = 'getNextMessage'
 
-const getNextMessage = async () =>{
+const getNextMessage = async () => {
   await setAppStatusAsync('waiting')
   document.dispatchEvent(new CustomEvent(nextMessageEvent))
 } 
